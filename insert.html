@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <!-- our css -->
+    <link rel="stylesheet" href="style.css">
+    <style>
+ #modal{
+  background: rgba(0,0,0,0.6);
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  display: none;
+}
+#modal-form{
+  background: #fff;
+  width: 30%;
+  position: absolute;
+  top: 20%;
+  left: 35%;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+#error{
+  color:red;
+}
+
+#close-btn{
+  background: gray;
+  color: white;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  border-radius: 50%;
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  cursor: pointer;
+}
+
+#edit{
+  background-color: blue;
+  color: white;
+  padding: 5px;
+  border: none;
+  width:80px;
+}#savebtn{
+  background-color: blue;
+  color: white;
+  padding: 5px;
+  border: none;
+  width:80px;
+}
+
+
+    </style>
+
+    <title>PHP Ajax</title>
+  </head>
+  <body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                      Ajax Insert
+                      
+                    </div>
+                    <div id="error"></div>
+                    <div id="modal">
+                      <div id="modal-form">
+                        <h2>Edit Entry</h2>
+                        <table cellpadding="10px" width="100%">
+                          <tr><td><input type="hidden" name="name" id="eid" placeholder="ID"></td></tr>
+                          <tr><td><input type="text" name="name" id="ename" placeholder="Name"></td></tr>
+                          <tr><td><input type="text" name="name" id="eage" placeholder="Age"></td></tr>
+                          <tr><td><input type="text" name="name" id="egender" placeholder="Gender"></td></tr>
+                          
+                          <tr><td><input type="button" value="Edit" id="edit" ></td><</tr>
+                        </table>
+                        <div id="close-btn">X</div>
+                      </div>
+                    </div>
+                    <div class="card-body ">
+                      <form id="myform">
+                        <table cellpadding="10px" width="100%">
+                          <tr><td><input type="hidden" name="name" id="id" placeholder="ID"></td></tr>
+                          <tr><td><input type="text" name="name" id="name" placeholder="Name"></td><td><input type="text" name="name" id="age" placeholder="Age"></td></tr>
+                       
+                          <tr><td><input type="text" name="name" id="gender" placeholder="Gender"></td></tr>
+                          
+                          <tr><td style="text-align:center"><input type="button" value="Insert" id="savebtn"></td><</tr>
+                        </table>
+                      </form>
+                      
+                     
+                        <div id="table-data">
+
+                        </div>
+
+                        
+                    </div>
+                  </div>
+
+            </div>
+        </div>
+    </div>
+ 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <script type="text/javascript">
+
+      $(document).ready(function(){
+
+        function loadData() {
+
+            $.ajax({
+              url:'load-data.php',
+              type:'GET',
+              success: function(data){
+                $('#table-data').html(data);
+              }
+            });
+
+        }
+        loadData();
+
+        $('#edit').on('click', function(){
+
+          var sid=$('#eid').val();
+          var sname=$('#ename').val();
+          var sage=$('#eage').val();
+          var sgender=$('#egender').val();
+
+          $.ajax({
+            url:'edit.php',
+            type:'POST',
+            data:{id:sid,name:sname,age:sage,gender:sgender},
+            
+            success: function(data){
+              if(data==1){
+              loadData();
+              $('#modal').hide();
+              swal({
+                    title: "Good Job!",
+                    text: "Data Edited",
+                    icon: "success",
+                    button: "OK",
+                });
+            }else{
+              swal({
+                    title: "Oops!",
+                    text: "Failed",
+                    icon: "error",
+                    button: "OK",
+                });
+            }
+            }
+          });
+        });
+
+        $(document).on('click','.editbtn',function(){
+                   
+          var stdid=$(this).data('id');
+          var stdname=$(this).data('name');
+          var stdage=$(this).data('age');
+          var stdgender=$(this).data('gender');
+
+          var sid=$('#eid').val(stdid);
+          var sname=$('#ename').val(stdname);
+          var sage=$('#eage').val(stdage);
+          var sgender=$('#egender').val(stdgender);
+
+          $('#modal').show();
+
+        });
+        
+        $('#close-btn').on('click',function(){
+          $('#modal').hide();
+          
+        });
+
+        $(document).on('click','.delbtn',function(){
+        if(confirm('Do you want to delete this?')){
+
+        var stdid=$(this).data('id');
+        $.ajax({
+          url: 'delid.php',
+          type: 'POST',
+          data: {id:stdid},
+          success: function(data){
+            if(data==1){
+              loadData();
+              swal({
+                    title: "Good Job!",
+                    text: "Data Deleted",
+                    icon: "success",
+                    button: "OK",
+                });
+            }else{
+              swal({
+                    title: "Oops!",
+                    text: "Delete Failed",
+                    icon: "success",
+                    button: "OK",
+                });
+            }
+          }
+        })
+      }
+        });
+
+        $('#savebtn').on('click',function(e){
+
+          
+            e.preventDefault();
+
+            var sname=$('#name').val();
+            var sage=$('#age').val();
+            var sgender=$('#gender').val();
+
+            if (sname==""||sgender==""||sage==""){
+                $('#error').html('All fields are required').slideDown();
+            }else{
+                $.ajax({
+              url:'insert.php',
+              type:'POST',
+              data: {name:sname,age:sage,gender:sgender},
+              success: function(data){
+                loadData();
+                $('#myform').trigger('reset');
+                if(data==1){
+                    swal({
+                    title: "Good Job!",
+                    text: "Data Inserted",
+                    icon: "success",
+                    button: "OK",
+                });
+                }else{
+                    swal({
+                    title: "Oops!",
+                    text: "Data Insert Failed",
+                    icon: "error",
+                    button: "OK",
+                });
+                }
+              }
+            });
+            
+            }
+        });
+            
+      });
+    </script>
+
+  </body>
+</html>
