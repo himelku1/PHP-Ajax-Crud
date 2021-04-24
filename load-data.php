@@ -16,7 +16,7 @@ include 'dbc.php';
      $age=$row['age'];
      $gender=$row['gender'];
 
-     $output.="<tbody><tr><td>$name</td><td>$age</td><td>$gender</td><td><button style='background-color:blue;color:white;margin-right:10px;border: none;' data-id='$roll' class='delbtn'>Delete</button><button style='background-color:blue;color:white;margin-right:10px;border: none;' data-id='$roll' data-name='$name' data-age='$age' data-gender='$gender' class='editbtn'>Edit</button></td></tbody>";
+     $output.="<tbody><tr><td>$name</td><td>$age</td><td>$gender</td><td><button style='background-color:red;color:white;margin-right:10px;border: none;' data-id='$roll' class='delbtn'>Delete</button><button style='background-color:blue;color:white;margin-right:10px;border: none;' data-id='$roll' data-name='$name' data-age='$age' data-gender='$gender' class='editbtn'>Edit</button></td></tbody>";
  }
  $output.="</table>";
 
