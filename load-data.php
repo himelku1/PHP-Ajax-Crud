@@ -2,7 +2,7 @@
 
 include 'dbc.php';
 
- $stm=$conn->prepare("select * from student_details");
+ $stm=$conn->prepare("select * from student_details order by roll desc");
 
  $stm->execute();
 
